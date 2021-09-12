@@ -30,19 +30,42 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
-"""
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
-"""
 
 # Construccion de modelos
+def newCatalog():
+    """
+    Inicializa el catálogo de Artistas y obras. Crea una lista vacia para guardar
+    todos los artistas y adicionalmente crea una lista vacia para las obras. 
+    Retorna el catalogo inicializado.
+    """
+    catalog = {'artists': None,
+               'artworks': None,}
+
+    catalog['artists'] = lt.newList("SINGLE_LINKED",
+                                    cmpfunction=compareartist) 
+    catalog['artworks'] = lt.newList("SINGLE_LINKED")
+
+    return catalog
 
 # Funciones para agregar informacion al catalogo
 
+def addArtist(catalog, artist):
+    # Se adiciona el artista a la lista de artistas
+    lt.addLast(catalog['artists'], artist)
+
+def addArtwork(catalog, artwork):
+    # Se adiciona la obra a la lista de obras
+    lt.addLast(catalog['artworks'], artwork)    
+ 
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareartist(artistname1, artist):
+    if (artistname1.lower() in artist["DisplayName"].lower()):
+        return 0
+    return -1
 
 # Funciones de ordenamiento
