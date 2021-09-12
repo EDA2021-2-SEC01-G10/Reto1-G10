@@ -36,14 +36,14 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información de los artistas y obras.")
-    print("2- Listar cronológicamente los artistas. ")
-    print("3- Listar cronológicamente las adquisiciones.")
-    print("4- Transportar obras de un departamento. ")
-    print("0- Salir.") 
+    print("1- Cargar información de los artistas y obras")
+    print("2- Listar cronológicamente los artistas ")
+    print("3- Listar cronológicamente las adquisiciones")
+    print("4- Transportar obras de un departamento ")
+    print("0- Salir") 
 def initCatalog():
     """
-    Inicializa el catalogo de libros
+    Inicializa el catalogo de artistas y obras 
     """
     return controller.initCatalog()
 
