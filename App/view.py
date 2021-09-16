@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from typing import KeysView
 import config as cf
 import sys
 import controller
@@ -37,15 +38,16 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información de los artistas y obras")
-    print("2- Listar cronológicamente los artistas ")
-    print("3- Listar cronológicamente las adquisiciones")
-    print("4- Transportar obras de un departamento ")
-    print("0- Salir") 
-def initCatalog():
+    print("2- Req.1 Listar cronológicamente los artistas ")
+    print("3- Req.2 Listar cronológicamente las adquisiciones")
+    print("4- Req.5 Transportar obras de un departamento ")
+    print("0- Salir")
+
+def initCatalog(ltType):
     """
     Inicializa el catalogo de artistas y obras 
     """
-    return controller.initCatalog()
+    return controller.initCatalog(ltType)
 
 
 def loadData(catalog): 
@@ -53,6 +55,10 @@ def loadData(catalog):
     Carga los libros en la estructura de datos
     """
     controller.loadData(catalog)
+
+def sortAdquisisiones(catalog,size,sortType):
+    time_sort=controller.sortAdquisisiones(catalog,size,sortType)
+    return time_sort 
 
 
 catalog = None
@@ -64,18 +70,29 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        ltType=int(input("Ingrese 0 si desea cargar los datos con estructura ARRAY_LIST o ingrese 1 si los desea con estructura LINKED_LIST  :"))
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        catalog = initCatalog(ltType)
         loadData(catalog)
         print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
-
+       
     elif int(inputs[0]) == 2:
         pass
     elif int(inputs[0]) == 3:
-        pass
+        size=int(input("Ingrese el tamaño de la muestra que desea consultar: "))
+        print("Ahora observe los tipos de ordenamiento que se pueden aplicar: ")
+        print("1. InsertionSort")
+        print("2. ShellSort")
+        print("3. MergeSort")
+        print("4. QuickSort")
+        sortType=int(input("Ingrese el numero del ordenamiendo que desea aplicar: "))
+        print(sortAdquisisiones(catalog,size,sortType))
+        
     elif int(inputs[0]) == 4:
         pass
     else:
         sys.exit(0)
 sys.exit(0)
+
+
