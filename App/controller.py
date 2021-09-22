@@ -101,7 +101,7 @@ def idArtist(catalog, nombreArtista):
        return id
     else: 
          return 0   
-
+ 
 def obrasArtist(catalog,id):
     obras=model.obrasArtist(catalog,id)
     return obras

@@ -104,20 +104,20 @@ while True:
         fechaFinal=input("Ingrese la fecha que desee consultar como rango final de las adquisisiones: ")
         listAdquisisiones=listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal)
         print("El MoMA adquirio "+str(lt.size(listAdquisisiones))+" piezas unicas entre "+fechaInicial+" y "+fechaFinal) 
-        compradas=0 
-        for i in range(1,lt.size(listAdquisisiones)):
-            creditLine=listAdquisisiones["elements"][i]["CreditLine"]
+        compradas=0          
+        for i in lt.iterator(listAdquisisiones):
+            creditLine=i["CreditLine"]
             if creditLine == "Purchase":
                compradas+=1
-        print("Con un total de "+str(compradas)+" obras compradas.")       
+        print("Con un total de "+str(compradas)+" obras compradas.")  
 
     elif int(inputs[0]) == 4:
          nombreArtista=input("Ingrese el nombre del artista que desea consultar: ")
          retorno=listaObrasArtista(catalog,nombreArtista)
          obras=retorno[1]
          id=retorno[0]
-         print (retorno)
-
+         print (nombreArtista+" con MoMA ID "+id+" tiene "+str(lt.size(obras))+" piezas con su nombre en el museo.")
+    
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:
@@ -125,7 +125,8 @@ while True:
     elif int(inputs[0]) == 7:
         pass  
     elif int(inputs[0]) == 8:
-        pass     
+         for i in lt.iterator(catalog["artists"]):
+             print(i)
     else:
         sys.exit(0)
 sys.exit(0)

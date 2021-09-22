@@ -24,7 +24,6 @@
  * Dario Correal - Version inicial
  """
 from datetime import datetime 
-from datetime import date
 import time
 import config as cf
 from DISClib.ADT import list as lt
@@ -64,10 +63,10 @@ def addArtwork(catalog, artwork):
 # Funciones de consulta y creacion de sublistas
 def subListarCronologicamenteArtistas(sortArtistas,añoInicial,añoFinal):   
     subListSortArtists=lt.newList("ARRAY_LIST")
-    for i in range(1,lt.size(sortArtistas)):
-        añoBegin=int(sortArtistas["elements"][i]["BeginDate"])
+    for i in lt.iterator(sortArtistas):
+        añoBegin=int(i["BeginDate"])
         if añoBegin >= añoInicial and añoBegin <= añoFinal : 
-           artista=sortArtistas["elements"][i]
+           artista=i
            lt.addLast(subListSortArtists,artista)
     return subListSortArtists           
             
@@ -75,32 +74,30 @@ def subListarCronologicamenteAdquisisiones(sortArtworks,fechaInicial,fechaFinal)
     fechaInDate = datetime.strptime(fechaInicial.strip(), "%Y-%m-%d")
     fechaFinDate= datetime.strptime(fechaFinal.strip(), "%Y-%m-%d")
     subListSortArtworks=lt.newList("ARRAY_LIST")
-    for i in range(1,lt.size(sortArtworks)): 
-        dateAcquired=sortArtworks["elements"][i]["DateAcquired"]
+    for i in lt.iterator(sortArtworks):
+        dateAcquired=i["DateAcquired"]
         if dateAcquired != "" : 
            dateAcquiredDate=datetime.strptime(dateAcquired.strip(), "%Y-%m-%d")
            if dateAcquiredDate >= fechaInDate and dateAcquiredDate <= fechaFinDate: 
-              artwork=sortArtworks["elements"][i]
+              artwork=i
               lt.addLast(subListSortArtworks,artwork)      
     return subListSortArtworks
 
 def idArtist(catalog, nombreArtista): 
-    artistascat=catalog["artists"]["elements"]
     artistas=lt.newList("ARRAY_LIST")
-    for artist in artistascat: 
+    for artist in lt.iterator(catalog["artists"]): 
          lt.addLast(artistas,artist)
-    for i in range (1,lt.size(artistas)):
-        nombre=artistas["elements"][i]["DisplayName"]  
+    for i in lt.iterator(artistas):
+        nombre=i["DisplayName"]  
         if nombreArtista.strip() == nombre.strip() : 
-           id=(artistas["elements"][i]['ConstituentID'])        
+           id=i['ConstituentID']      
            return id 
     return ("Error")    
 
 def obrasArtist(catalog,id): 
-     obrascat=catalog["artworks"]["elements"]
      obrasArtista=lt.newList("ARRAY_LIST")
-     for obra in obrascat: 
-         idObra=(obra["ConstituentID"])
+     for obra in lt.iterator(catalog["artworks"]):
+         idObra=obra["ConstituentID"]
          idObra=idObra.replace("]","")
          idObra=idObra.replace("[","")
          idObra=idObra.split(",")
@@ -134,17 +131,15 @@ def cmpArtistByBeginDate(artista1, artista2):
 # Funciones de ordenamiento
 
 def sortArtistasCronologicamente(catalog):
-     artistascat=catalog["artists"]["elements"]
      artistas=lt.newList("ARRAY_LIST")
-     for artist in artistascat: 
+     for artist in lt.iterator(catalog["artists"]): 
          lt.addLast(artistas,artist)
      artistasOrdenados=merge.sort(artistas,cmpArtistByBeginDate)    
      return artistasOrdenados
      
 def sortObrasCronologicamente(catalog):
-    artworksCat=catalog["artworks"]["elements"]
     artworks=lt.newList("ARRAY_LIST")
-    for artwork in artworksCat: 
+    for artwork in lt.iterator(catalog["artworks"]):
          lt.addLast(artworks,artwork)
     artworksOrdenados=merge.sort(artworks,cmpArtworkByDateAcquired)    
     return artworksOrdenados
