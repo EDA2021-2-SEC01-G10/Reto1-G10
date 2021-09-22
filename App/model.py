@@ -61,6 +61,14 @@ def addArtwork(catalog, artwork):
 # Funciones para creacion de datos
 
 # Funciones de consulta y creacion de sublistas
+def subListarDepartamento(catalog,departamento):
+    subListaDepartamento=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(catalog["artworks"]):
+        departamentoObra=i["Department"]
+        if departamentoObra == departamento: 
+           lt.addLast(subListaDepartamento,i)
+    return subListaDepartamento
+           
 def subListarCronologicamenteArtistas(sortArtistas,añoInicial,añoFinal):   
     subListSortArtists=lt.newList("ARRAY_LIST")
     for i in lt.iterator(sortArtistas):

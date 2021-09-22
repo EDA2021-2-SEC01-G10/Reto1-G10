@@ -129,3 +129,7 @@ def listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal):
     sortArtworks=sortObrasCronologicamente(catalog)
     subList=subListarCronologicamenteAdquisisiones(sortArtworks,fechaInicial,fechaFinal)
     return subList    
+
+def listaDepartamento(catalog,departamento):  
+    subLista=model.subListarDepartamento(catalog,departamento)
+    return subLista

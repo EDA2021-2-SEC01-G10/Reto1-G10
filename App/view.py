@@ -74,10 +74,13 @@ def listaObrasArtista(catalog, nombreArtista):
     listaObras=controller.listarObrasArtista(catalog, nombreArtista)
     return listaObras 
 
-def prueba(catalog):
-    s=controller.sortObrasCronologicamente(catalog)
-    return s 
+def lstDepartamento(catalog,departamento):
+    listaDepartamento=controller.listaDepartamento(catalog,departamento)
+    return listaDepartamento
+
+
 catalog = None
+
 
 """
 Menu principal
@@ -175,7 +178,10 @@ while True:
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:
-        pass
+         departamento=input("Ingrese el nombre del departamento que quiere consultar: ")
+         listDepartamento=lstDepartamento(catalog,departamento)
+         print("El MoMA va a transportar "+str(lt.size(listDepartamento))+" obras del departamento de "+departamento)
+    
     elif int(inputs[0]) == 7:
         pass  
     else:
