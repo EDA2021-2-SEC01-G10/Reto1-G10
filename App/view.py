@@ -38,16 +38,20 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información de los artistas y obras")
-    print("2- Req.1 Listar cronológicamente los artistas ")
-    print("3- Req.2 Listar cronológicamente las adquisiciones")
-    print("4- Req.5 Transportar obras de un departamento ")
+    print("2- (Req.1) Listar cronológicamente los artistas")
+    print("3- (Req.2) Listar cronológicamente las adquisiciones")
+    print("4- (Req.3) Clasificar las obras de un artista por técnica")
+    print("5- (Req.4) Clasificar las obras por la nacionalidad de sus creadores ")
+    print("6- (Req.5) Transportar obras de un departamento ")
+    print("7- (Req.6) proponer una nueva exposición en el museo")
+    print("8- mostrar")
     print("0- Salir")
 
-def initCatalog(ltType):
+def initCatalog():
     """
     Inicializa el catalogo de artistas y obras 
     """
-    return controller.initCatalog(ltType)
+    return controller.initCatalog()
 
 
 def loadData(catalog): 
@@ -56,11 +60,24 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
-def sortAdquisisiones(catalog,size,sortType):
-    time_sort=controller.sortAdquisisiones(catalog,size,sortType)
-    return time_sort 
+def listarCronologicamenteArtistas(catalog,añoInicial,añoFinal):    
+    """
+    Inicializa la funcion listar cronologicamente artistas en el controlador
+    """
+    listArtistas=controller.listarCronologicamenteArtistas(catalog,añoInicial,añoFinal)
+    return listArtistas
 
+def listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal):
+    listAdquisisiones=controller.listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal)
+    return listAdquisisiones
 
+def listaObrasArtista(catalog, nombreArtista):   
+    listaObras=controller.listarObrasArtista(catalog, nombreArtista)
+    return listaObras 
+
+def prueba(catalog):
+    s=controller.sortObrasCronologicamente(catalog)
+    return s 
 catalog = None
 
 """
@@ -70,27 +87,45 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        ltType=int(input("Ingrese 0 si desea cargar los datos con estructura ARRAY_LIST o ingrese 1 si los desea con estructura LINKED_LIST  :"))
         print("Cargando información de los archivos ....")
-        catalog = initCatalog(ltType)
+        catalog = initCatalog()
         loadData(catalog)
         print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
        
     elif int(inputs[0]) == 2:
-        pass
+         añoInicial=int(input("Ingrese el año de nacimiento para el rango inicial de artistas deseado:"))
+         añoFinal=int(input("Ingrese el año de nacimiento para el rango final de artistas deseado:"))
+         listaArtistas=listarCronologicamenteArtistas(catalog,añoInicial,añoFinal)
+         print("Hay " + str(lt.size(listaArtistas)) +" artistas nacidos entre "+str(añoInicial)+" y "+str(añoFinal))
+
     elif int(inputs[0]) == 3:
-        size=int(input("Ingrese el tamaño de la muestra que desea consultar: "))
-        print("Ahora observe los tipos de ordenamiento que se pueden aplicar: ")
-        print("1. InsertionSort")
-        print("2. ShellSort")
-        print("3. MergeSort")
-        print("4. QuickSort")
-        sortType=int(input("Ingrese el numero del ordenamiendo que desea aplicar: "))
-        print(sortAdquisisiones(catalog,size,sortType))
-        
+        fechaInicial=input("Ingrese la fecha que desee consultar como rango inicial de las adquisisiones: ")
+        fechaFinal=input("Ingrese la fecha que desee consultar como rango final de las adquisisiones: ")
+        listAdquisisiones=listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal)
+        print("El MoMA adquirio "+str(lt.size(listAdquisisiones))+" piezas unicas entre "+fechaInicial+" y "+fechaFinal) 
+        compradas=0 
+        for i in range(1,lt.size(listAdquisisiones)):
+            creditLine=listAdquisisiones["elements"][i]["CreditLine"]
+            if creditLine == "Purchase":
+               compradas+=1
+        print("Con un total de "+str(compradas)+" obras compradas.")       
+
     elif int(inputs[0]) == 4:
+         nombreArtista=input("Ingrese el nombre del artista que desea consultar: ")
+         retorno=listaObrasArtista(catalog,nombreArtista)
+         obras=retorno[1]
+         id=retorno[0]
+         print (retorno)
+
+    elif int(inputs[0]) == 5:
         pass
+    elif int(inputs[0]) == 6:
+        pass
+    elif int(inputs[0]) == 7:
+        pass  
+    elif int(inputs[0]) == 8:
+        pass     
     else:
         sys.exit(0)
 sys.exit(0)

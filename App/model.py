@@ -23,7 +23,8 @@
  *
  * Dario Correal - Version inicial
  """
-
+from datetime import datetime 
+from datetime import date
 import time
 import config as cf
 from DISClib.ADT import list as lt
@@ -34,7 +35,7 @@ from DISClib.Algorithms.Sorting import quicksort as quick
 assert cf
 
 # Construccion de modelos
-def newCatalog(ltType):
+def newCatalog():
     """
     Inicializa el catálogo de Artistas y obras. Crea una lista vacia para guardar
     todos los artistas y adicionalmente crea una lista vacia para las obras. 
@@ -43,38 +44,11 @@ def newCatalog(ltType):
     catalog = {'artists': None,
                'artworks': None,}
 
-    catalog['artists'] = lt.newList("SINGLE_LINKED")
+    catalog['artists'] = lt.newList("ARRAY_LIST")
              
-    catalog['artworks'] = lt.newList("SINGLE_LINKED")
-
-
-def newCatalog_lab4(ltType):
-    """
-    Inicializa el catálogo de Artistas y obras. Crea una lista vacia para guardar
-    todos los artistas y adicionalmente crea una lista vacia para las obras. 
-    Retorna el catalogo inicializado.
-    """
-    if ltType == 0:
-        catalog = {'artists': None,
-               'artworks': None,}
-
-        catalog['artists'] = lt.newList("ARRAY_LIST")
-                                
-        catalog['artworks'] = lt.newList("ARRAY_LIST")
-
-        return catalog
-
-    elif ltType == 1:
-        catalog = {'artists': None,
-               'artworks': None,}
-
-        catalog['artists'] = lt.newList("SINGLE_LINKED")
-             
-        catalog['artworks'] = lt.newList("SINGLE_LINKED")
-
-        return catalog
-     
-
+    catalog['artworks'] = lt.newList("ARRAY_LIST")
+    
+    return catalog 
 # Funciones para agregar informacion al catalogo
 
 def addArtist(catalog, artist):
@@ -87,7 +61,55 @@ def addArtwork(catalog, artwork):
  
 # Funciones para creacion de datos
 
-# Funciones de consulta
+# Funciones de consulta y creacion de sublistas
+def subListarCronologicamenteArtistas(sortArtistas,añoInicial,añoFinal):   
+    subListSortArtists=lt.newList("ARRAY_LIST")
+    for i in range(1,lt.size(sortArtistas)):
+        añoBegin=int(sortArtistas["elements"][i]["BeginDate"])
+        if añoBegin >= añoInicial and añoBegin <= añoFinal : 
+           artista=sortArtistas["elements"][i]
+           lt.addLast(subListSortArtists,artista)
+    return subListSortArtists           
+            
+def subListarCronologicamenteAdquisisiones(sortArtworks,fechaInicial,fechaFinal):     
+    fechaInDate = datetime.strptime(fechaInicial.strip(), "%Y-%m-%d")
+    fechaFinDate= datetime.strptime(fechaFinal.strip(), "%Y-%m-%d")
+    subListSortArtworks=lt.newList("ARRAY_LIST")
+    for i in range(1,lt.size(sortArtworks)): 
+        dateAcquired=sortArtworks["elements"][i]["DateAcquired"]
+        if dateAcquired != "" : 
+           dateAcquiredDate=datetime.strptime(dateAcquired.strip(), "%Y-%m-%d")
+           if dateAcquiredDate >= fechaInDate and dateAcquiredDate <= fechaFinDate: 
+              artwork=sortArtworks["elements"][i]
+              lt.addLast(subListSortArtworks,artwork)      
+    return subListSortArtworks
+
+def idArtist(catalog, nombreArtista): 
+    artistascat=catalog["artists"]["elements"]
+    artistas=lt.newList("ARRAY_LIST")
+    for artist in artistascat: 
+         lt.addLast(artistas,artist)
+    for i in range (1,lt.size(artistas)):
+        nombre=artistas["elements"][i]["DisplayName"]  
+        if nombreArtista.strip() == nombre.strip() : 
+           id=(artistas["elements"][i]['ConstituentID'])        
+           return id 
+    return ("Error")    
+
+def obrasArtist(catalog,id): 
+     obrascat=catalog["artworks"]["elements"]
+     obrasArtista=lt.newList("ARRAY_LIST")
+     for obra in obrascat: 
+         idObra=(obra["ConstituentID"])
+         idObra=idObra.replace("]","")
+         idObra=idObra.replace("[","")
+         idObra=idObra.split(",")
+         if str(id) in idObra: 
+             lt.addLast(obrasArtista,obra)  
+     return obrasArtista   
+         
+     
+            
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpArtworkByDateAcquired(artwork1, artwork2):
@@ -99,43 +121,30 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
      """
     return ((str(artwork1['DateAcquired']) < str(artwork2['DateAcquired'])))
 
+def cmpArtistByBeginDate(artista1, artista2):
+    """
+     Devuelve verdadero (True) si el 'BeginDate' de artista1 es menor que el de artista2
+     Args:
+     artista1: informacion del primer artista que incluye su valor 'BeginDate'
+     artista2: informacion del segundo artista que incluye su valor 'BeginDate'
+     """
+    return ((int(artista1['BeginDate']) < int(artista2['BeginDate'])))
 
-def compareArtist(artistname1, artist):
-    if artistname1.lower() in artist["DisplayName"].lower():
-        return 0
-    return -1
 
 # Funciones de ordenamiento
 
-def sortAdquisisiones(catalog,size,sortType):
-    if size > lt.size(catalog['artworks']): 
-       return ("El tamaño de la muestra que desea consultar es mayor a los datos cargados.") 
-    else: 
-        sub_List=lt.subList(catalog['artworks'], 1, size)
-        sub_List=sub_List.copy()
-        if sortType == 1: 
-            start_time = time.process_time()
-            sorted_list= insertion.sort(sub_List, cmpArtworkByDateAcquired)
-            stop_time = time.process_time()
-            elapsed_time_mseg = (stop_time - start_time)*1000
-            return (elapsed_time_mseg)
-        elif sortType == 2: 
-            start_time = time.process_time()
-            sorted_list= shell.sort(sub_List, cmpArtworkByDateAcquired)
-            stop_time = time.process_time()
-            elapsed_time_mseg = (stop_time - start_time)*1000
-            return (elapsed_time_mseg)
-        elif sortType == 3: 
-            start_time = time.process_time()
-            sorted_list= merge.sort(sub_List, cmpArtworkByDateAcquired)
-            stop_time = time.process_time()
-            elapsed_time_mseg = (stop_time - start_time)*1000
-            return (elapsed_time_mseg)
-        elif sortType == 4: 
-            start_time = time.process_time()
-            sorted_list= quick.sort(sub_List, cmpArtworkByDateAcquired)
-            stop_time = time.process_time()
-            elapsed_time_mseg = (stop_time - start_time)*1000
-            return (elapsed_time_mseg)
-        else: 
-            return ("Selecciones una opcion de ordenamiento valida")
+def sortArtistasCronologicamente(catalog):
+     artistascat=catalog["artists"]["elements"]
+     artistas=lt.newList("ARRAY_LIST")
+     for artist in artistascat: 
+         lt.addLast(artistas,artist)
+     artistasOrdenados=merge.sort(artistas,cmpArtistByBeginDate)    
+     return artistasOrdenados
+     
+def sortObrasCronologicamente(catalog):
+    artworksCat=catalog["artworks"]["elements"]
+    artworks=lt.newList("ARRAY_LIST")
+    for artwork in artworksCat: 
+         lt.addLast(artworks,artwork)
+    artworksOrdenados=merge.sort(artworks,cmpArtworkByDateAcquired)    
+    return artworksOrdenados
