@@ -77,6 +77,15 @@ def listaObrasArtista(catalog, nombreArtista):
 def lstDepartamento(catalog,departamento):
     listaDepartamento=controller.listaDepartamento(catalog,departamento)
     return listaDepartamento
+def sacarPrecios(listaDepartamento):
+    listaPrecios=controller.sacarPrecios(listDepartamento)
+    return listaPrecios
+def ordenarPorCosto(precios): 
+    listOrdenada=controller.ordenarPorCosto(precios)
+    return listOrdenada
+def ordenarPorFecha(precios): 
+    listOrdenada=controller.ordenarPorFecha(precios)
+    return listOrdenada
 
 
 catalog = None
@@ -131,7 +140,7 @@ while True:
         print("")     
         print("Con un total de "+str(compradas)+" obras compradas.")  
         print("")
-        print("Los primeros y ultimos 3 artistas nacidos en este rango son: ")
+        print("Las primeras y ultimas 3 obras en este rango son: ")
         print("")
         artworksMostrar=(list(lt.iterator(listAdquisisiones)))
         for i in range (0,3):
@@ -166,7 +175,7 @@ while True:
              if num == maxTecnique :
                 maxTecniqueName=i 
                 print("")
-                print("La tecnica mas usada por el artista es "+ i)
+                print("La tecnica má6s usada por el/la artista es "+ i +",con la cual tiene los siguientes ejemplares:")
                 print("")
                 break
          for obra in lt.iterator(obras):   
@@ -179,9 +188,58 @@ while True:
         pass
     elif int(inputs[0]) == 6:
          departamento=input("Ingrese el nombre del departamento que quiere consultar: ")
+         departamento=departamento.strip()
          listDepartamento=lstDepartamento(catalog,departamento)
+         print("")
          print("El MoMA va a transportar "+str(lt.size(listDepartamento))+" obras del departamento de "+departamento)
-    
+         pesoTotalEstimado=0.0 
+         for i in lt.iterator(listDepartamento):
+             pesoPorObra=i["Weight (kg)"]
+             if pesoPorObra != "": 
+                pesoPorObra=float(pesoPorObra) 
+                pesoTotalEstimado += pesoPorObra 
+         print("")       
+         print("El peso estimado de la carga en Kg es :" + str(pesoTotalEstimado))
+         precios=sacarPrecios(listDepartamento)
+         precioTotalEstimado=0.0
+         for j in lt.iterator(precios):
+             precio=j["CostoObra"]
+             precioTotalEstimado+=precio
+         print("")       
+         print("El costo estimado de la carga en USD es :" + str(round(precioTotalEstimado,3)))
+         preciosOrdenadosFecha=ordenarPorFecha(precios)
+         preciosOrdenadosCosto=ordenarPorCosto(precios)
+         print("")       
+         print("Las 5 obras más antiguas para transportar son:")
+         print("")   
+         obrasMostrar=list(lt.iterator(preciosOrdenadosFecha))
+         mostradas=0
+         i=0
+         while i < len(obrasMostrar) and mostradas <5 :
+              fecha= obrasMostrar[i]["Date"]
+              if fecha != "":
+                 print("|Titulo: "+obrasMostrar[i]["Title"]+"|Artista(s): "+obrasMostrar[i]["ConstituentID"]+"|Clasificación: "+obrasMostrar[i]["Classification"]+"|Fecha: "+obrasMostrar[i]["Date"]+"|Medio: "+obrasMostrar[i]["Medium"]+"|Dimensiones: "+obrasMostrar[i]["Dimensions"]+"|Costo(USD): "+str(round(obrasMostrar[i]["CostoObra"],3)))
+                 print("")
+                 mostradas+=1
+                 i+=1
+              else:
+                   i+=1   
+         print("")       
+         print("Las 5 obras más costosas para transportar son:")
+         print("")   
+         obrasMostrar=list(lt.iterator(preciosOrdenadosCosto))
+         mostradas=0
+         i=len(obrasMostrar)-1
+         while i > 0 and mostradas <5 :
+              costo= obrasMostrar[i]["CostoObra"]
+              if costo != "":
+                 print("|Titulo: "+obrasMostrar[i]["Title"]+"|Artista(s): "+obrasMostrar[i]["ConstituentID"]+"|Clasificación: "+obrasMostrar[i]["Classification"]+"|Fecha: "+obrasMostrar[i]["Date"]+"|Medio: "+obrasMostrar[i]["Medium"]+"|Dimensiones: "+obrasMostrar[i]["Dimensions"]+"|Costo(USD): "+str(round(obrasMostrar[i]["CostoObra"],3)))
+                 print("")
+                 mostradas+=1
+                 i-=1
+              else:
+                   i-=1         
+
     elif int(inputs[0]) == 7:
         pass  
     else:

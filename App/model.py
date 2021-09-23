@@ -58,7 +58,6 @@ def addArtwork(catalog, artwork):
     # Se adiciona la obra a la lista de obras
     lt.addLast(catalog['artworks'], artwork)    
  
-# Funciones para creacion de datos
 
 # Funciones de consulta y creacion de sublistas
 def subListarDepartamento(catalog,departamento):
@@ -113,7 +112,37 @@ def obrasArtist(catalog,id):
              lt.addLast(obrasArtista,obra)  
      return obrasArtista   
          
-     
+def sacarPrecios(listDepartamento):
+    preciosObras=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(listDepartamento): 
+        dimensiones=[]
+        alturaObra=i["Height (cm)"] 
+        anchuraObra=i["Width (cm)"]    
+        profundidadObra=i["Depth (cm)"]  
+        if alturaObra != "" and alturaObra != "0": 
+           alturaObra=float(alturaObra)/100
+           dimensiones.append(alturaObra)
+        if anchuraObra != "" and anchuraObra != "0": 
+           anchuraObra=float(anchuraObra)/100
+           dimensiones.append(anchuraObra) 
+        if profundidadObra != "" and profundidadObra != "0": 
+           profundidadObra=float(profundidadObra)/100
+           dimensiones.append(profundidadObra) 
+        productoDimensiones=1   
+        for dimension in dimensiones:
+            productoDimensiones*=dimension        
+        preciosObra=[]   
+        preciosObra.append(productoDimensiones * 72.00)
+        peso=i["Weight (kg)"]   
+        if peso != "" and peso != "0": 
+           peso=float(peso)  
+           preciosObra.append(peso*72.00)
+        precioMayor=max(preciosObra)
+        i["CostoObra"]=precioMayor             
+        lt.addLast(preciosObras,i)   
+       
+    return preciosObras  
+               
             
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -135,6 +164,23 @@ def cmpArtistByBeginDate(artista1, artista2):
      """
     return ((int(artista1['BeginDate']) < int(artista2['BeginDate'])))
 
+def cmpArtworkByCost (artwork1,artwork2): 
+    """
+     Devuelve verdadero (True) si el 'CostoObra' de artwork1 es menor que el de artwork2
+     Args:
+     artwork1: informacion del primer artwork que incluye su valor 'CostoObra'
+     artwork2: informacion del segundo artwork que incluye su valor 'CostoObra'
+    """
+    return ((float(artwork1['CostoObra']) < float(artwork2['CostoObra'])))
+
+def cmpArtworkByDate(artwork1,artwork2): 
+    """
+     Devuelve verdadero (True) si el 'Date' de artwork1 es menor que el de artwork2
+     Args:
+     artwork1: informacion del primer artwork que incluye su valor 'Date'
+     artwork2: informacion del segundo artwork que incluye su valor 'Date'
+    """    
+    return ((str(artwork1['Date']) < str(artwork2['Date'])))
 
 # Funciones de ordenamiento
 
@@ -151,3 +197,17 @@ def sortObrasCronologicamente(catalog):
          lt.addLast(artworks,artwork)
     artworksOrdenados=merge.sort(artworks,cmpArtworkByDateAcquired)    
     return artworksOrdenados
+
+def ordenarPorCosto(precios):
+    obrasConPrecio=lt.newList("ARRAY_LIST")  
+    for obra in lt.iterator(precios):
+         lt.addLast(obrasConPrecio,obra)
+    obrasConPrecioOrdenados=merge.sort(obrasConPrecio,cmpArtworkByCost)    
+    return obrasConPrecioOrdenados 
+
+def ordenarPorFecha(precios):     
+    obrasPorFecha=lt.newList("ARRAY_LIST")  
+    for obra in lt.iterator(precios):
+         lt.addLast(obrasPorFecha,obra)
+    obrasPorFechaOrdenadas=merge.sort(obrasPorFecha,cmpArtworkByDate)    
+    return obrasPorFechaOrdenadas 

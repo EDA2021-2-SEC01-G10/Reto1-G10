@@ -94,6 +94,15 @@ def subListarCronologicamenteAdquisisiones(sortArtworks,fechaInicial,fechaFinal)
     """
     subListSorted=model.subListarCronologicamenteAdquisisiones(sortArtworks,fechaInicial,fechaFinal)
     return subListSorted
+
+def ordenarPorCosto(precios):
+    listOrdenada=model.ordenarPorCosto(precios)   
+    return listOrdenada
+
+def ordenarPorFecha(precios):
+    listOrdenada=model.ordenarPorFecha(precios)
+    return listOrdenada 
+
 # Funciones de consulta y creacion se sublistas sobre el catálogo
 def idArtist(catalog, nombreArtista):
     id=model.idArtist(catalog, nombreArtista)
@@ -133,3 +142,7 @@ def listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal):
 def listaDepartamento(catalog,departamento):  
     subLista=model.subListarDepartamento(catalog,departamento)
     return subLista
+
+def sacarPrecios(listDepartamento): 
+    listaPrecios=model.sacarPrecios(listDepartamento)
+    return listaPrecios    
