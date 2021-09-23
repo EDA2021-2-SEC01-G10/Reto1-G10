@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
+import time
 from typing import KeysView
 import config as cf
 import sys
@@ -86,7 +86,8 @@ def ordenarPorCosto(precios):
 def ordenarPorFecha(precios): 
     listOrdenada=controller.ordenarPorFecha(precios)
     return listOrdenada
-
+def listNacion(catalogo):
+    listaNacionalidades=controller.listNacion(catalogo)
 
 catalog = None
 
@@ -98,13 +99,18 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        start_time = time.process_time()
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
         print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
         print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        stop_time = time.process_time()
+        timeT=(stop_time - start_time)*1000
+        print("Tiempo:",timeT)
        
     elif int(inputs[0]) == 2:
+         start_time = time.process_time()
          añoInicial=int(input("Ingrese el año de nacimiento para el rango inicial de artistas deseado:"))
          añoFinal=int(input("Ingrese el año de nacimiento para el rango final de artistas deseado:"))
          listaArtistas=listarCronologicamenteArtistas(catalog,añoInicial,añoFinal)
@@ -124,9 +130,12 @@ while True:
          else: 
              for i in lt.iterator(listaArtistas):
                  print("|Nombre: "+i["DisplayName"]+"|FechaDeNacimiento: "+i["BeginDate"]+"|FechaDeFallecimiento: "+i["EndDate"]+"|Nacionalidad: "+i["Nationality"]+"|Genero: "+i["Gender"])
-
+         stop_time = time.process_time()
+         timeT=(stop_time - start_time)*1000
+         print("Tiempo:",timeT)
     
     elif int(inputs[0]) == 3:
+        start_time = time.process_time()
         fechaInicial=input("Ingrese la fecha que desee consultar como rango inicial de las adquisisiones: ")
         fechaFinal=input("Ingrese la fecha que desee consultar como rango final de las adquisisiones: ")
         listAdquisisiones=listarAdquisisionesCronologicamente(catalog,fechaInicial,fechaFinal)
@@ -149,8 +158,12 @@ while True:
         for i in range (lt.size(listAdquisisiones)-3,lt.size(listAdquisisiones)):
              print("|Titulo: "+artworksMostrar[i]["Title"]+"|Artista(s): "+artworksMostrar[i]["ConstituentID"]+"|Fecha: "+artworksMostrar[i]["Date"]+"|Medio: "+artworksMostrar[i]["Medium"]+"|Dimensiones: "+artworksMostrar[i]["Dimensions"])
              print("")
-    
+        stop_time = time.process_time()
+        timeT=(stop_time - start_time)*1000
+        print("Tiempo:",timeT)
+
     elif int(inputs[0]) == 4:
+         start_time = time.process_time()
          nombreArtista=input("Ingrese el nombre del artista que desea consultar: ")
          retorno=listaObrasArtista(catalog,nombreArtista)
          obras=retorno[1]
@@ -183,10 +196,15 @@ while True:
              if tecnique == maxTecniqueName: 
                 print("|Titulo: "+obra["Title"]+"|Fecha: "+obra["Date"]+"|Medio: "+obra["Medium"]+"|Dimensiones: "+obra["Dimensions"])
                 print("")
+         stop_time = time.process_time()
+         timeT=(stop_time - start_time)*1000
+         print("Tiempo:",timeT)
 
     elif int(inputs[0]) == 5:
-        pass
+         listNacionalidades=listNacion(catalog)
+
     elif int(inputs[0]) == 6:
+         start_time = time.process_time()
          departamento=input("Ingrese el nombre del departamento que quiere consultar: ")
          departamento=departamento.strip()
          listDepartamento=lstDepartamento(catalog,departamento)
@@ -239,6 +257,9 @@ while True:
                  i-=1
               else:
                    i-=1         
+         stop_time = time.process_time()
+         timeT=(stop_time - start_time)*1000
+         print("Tiempo:",timeT)
 
     elif int(inputs[0]) == 7:
         pass  

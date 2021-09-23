@@ -50,7 +50,7 @@ def loadArtists(catalog):
     """
     Carga todos los artistas del archivo y los agrega a la lista de artistas.
     """ 
-    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-small.csv'
+    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in input_file:
         model.addArtist(catalog, artist) 
@@ -60,7 +60,7 @@ def loadArtworks(catalog):
     """
     Carga todos las obras del archivo y los agrega a la lista de obras.
     """
-    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
+    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for artwork in input_file:
         model.addArtwork(catalog, artwork)        
@@ -102,8 +102,15 @@ def ordenarPorCosto(precios):
 def ordenarPorFecha(precios):
     listOrdenada=model.ordenarPorFecha(precios)
     return listOrdenada 
-
+def conectarID(lista_obras,lista_artistas):
+    listaID=model.conectarID(lista_obras,lista_artistas)
 # Funciones de consulta y creacion se sublistas sobre el catálogo
+def listNacion(catalog):
+    lista_obras=catalog["artworks"]
+    lista_artistas=catalog["artists"]
+    listaID=conectarID(lista_obras,lista_artistas)
+    return listaID
+
 def idArtist(catalog, nombreArtista):
     id=model.idArtist(catalog, nombreArtista)
     if id != "Error": 

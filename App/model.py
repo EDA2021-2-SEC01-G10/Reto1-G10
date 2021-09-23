@@ -143,7 +143,15 @@ def sacarPrecios(listDepartamento):
        
     return preciosObras  
                
-            
+def conectarID(lista_obras,lista_artistas): 
+    nacionalidades=lt.newList("ARRAY_LIST")      
+    for obra in lt.iterator(lista_obras):    
+        idObra=obra["ConstituentID"]
+        idObra=idObra.replace("]","")
+        idObra=idObra.replace("[","")
+        idObra=idObra.split(",")
+        for artist in lt.iterator(lista_artistas):
+            idArtist=artist[""]
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpArtworkByDateAcquired(artwork1, artwork2):
